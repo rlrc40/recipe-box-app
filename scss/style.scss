@@ -1,0 +1,160 @@
+body{
+  padding: 20px;
+  background-color: #008080;
+  font-family: 'Bellefair', serif;
+}
+
+.recipe-list{
+  background-color: white;
+  #main-title{
+    width: 100%;
+    text-align: center;
+    font-size: 50px;
+  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: space-between;
+  margin: auto;
+  width: 80%;
+  padding: 20px;
+  border: 3px solid black;
+  border-radius: 5px;
+  .recipe-board{
+    display: flex;
+    height: 60%;
+    width: 350px;
+    border: 3px solid black;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px;
+    background-color: #e6e6fa;
+    .recipe {
+      width: 100%;
+      .recipe-name, .recipe-ingredients{
+        padding: 10px;
+        display: flex;
+        .recipe-name-field, .recipe-ingredients-field{
+          text-align: center;
+          width: 100%;
+          background: #b0e0e6;
+          border: 0px;
+        }
+        .recipe-name-field{
+          font-size: 2em;
+          border-bottom: 5px solid #0099cc;
+        }
+        .recipe-ingredients-field{
+          font-size: 1.6em;
+        }
+        input:read-only, textarea:read-only {
+          background: none; 
+          background-color: transparent !important; 
+        }
+      }
+    }
+  }
+}
+
+.recipe-form{
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translateY(-50%);
+  flex-wrap: wrap;
+  width: 60%;
+  border-radius: 40px;
+  background-color: #e6e6fa;
+  
+  .new-recipe-title{
+    font-size: 3em;
+    z-index: -1;
+    text-align: center;
+  }
+  
+  div {
+    z-index: 2;
+    width: 100%; 
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    
+    .label{
+      font-size: 2.5em;
+      width: 100%;
+      margin: auto;
+      color: black;
+    }
+    
+    input, textarea{
+      margin-left: 15px;
+      padding-left: 5px;
+      border: 0px;
+      width: 70%;
+    }
+  }
+}
+
+.remove-button, .edit-button, .save-button{
+  cursor: pointer;
+  font-size: 2em;
+  padding-left: 10px;
+}
+
+.remove-button{
+  color: red;
+}
+
+.edit-button{
+  color: blue;
+}
+
+.save-button{
+  color: green;
+}
+
+.add-button, .close-button{
+  cursor: pointer;
+  border-radius: 30%;
+  font-size: 2em !important;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  margin: 5px;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding-left: 2px;
+}
+
+.add-button{
+  color: #191970;
+  border: 5px solid #0099cc;
+}
+
+.close-button{
+  color: #cc0000;
+  border: 5px solid #ff4444;
+}
+
+.close-button:hover{
+  background-color: #ff4444;
+  color: white;
+}
+
+.add-button:hover{
+  background-color: #0099cc;
+  color: white;
+}
+
+textarea, input{
+  resize: none;
+  font-size: 1.5em;
+}
+
+.new-button{
+  margin-top: 50px;
+  font-size: 2em;
+}

@@ -1,0 +1,168 @@
+class RecipeBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      recipes: [{"name": "PIZZA", "ingredients": "Jamon", "unMount": false}, {"name": "HAMBURGUESA", "ingredients": "Carne\nEnsalada\nCebolla", "unMount": false}],
+      nameField: "",
+      ingredientsField: "",
+      displayForm: 'none'
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.eachRecipe = this.eachRecipe.bind(this);
+    this.removeRecipe = this.removeRecipe.bind(this);
+    this.updateRecipe = this.updateRecipe.bind(this);
+    this.showForm = this.showForm.bind(this);
+  }
+  
+  componentDidMount() {
+    const recipes =  JSON.parse(localStorage.getItem('_username_recipes'));
+    if(recipes){
+      this.setState({recipes});
+    }
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+  
+  removeRecipe(i) {
+    var recipes = this.state.recipes;
+    recipes[i].unMount = true;
+    this.setState({recipes});
+    localStorage.setItem('_username_recipes', JSON.stringify(recipes));
+  }
+  
+  updateRecipe(newRecipe, i) {
+    var recipes = this.state.recipes;
+    recipes[i] = newRecipe;
+    this.setState({recipes});
+    localStorage.setItem('_username_recipes', JSON.stringify(recipes));
+  }
+  
+  saveRecipe(recipe){
+    let recipes = this.state.recipes;
+    recipes.push(recipe);
+    this.setState(recipes);
+    localStorage.setItem('_username_recipes', JSON.stringify(recipes));
+  }
+  
+  showForm() {
+    this.setState({displayForm: this.state.displayForm === 'none' ? 'flex' : 'none'});
+  }
+
+  handleSubmit(event) {
+    if(this.state.nameField){
+      let recipe = {"name": this.state.nameField.toUpperCase(), "ingredients": this.state.ingredientsField, "unMount": false};
+      this.saveRecipe(recipe);
+      this.showForm();
+      this.setState({nameField: "", ingredientsField: ""});
+      event.preventDefault();
+    }
+  }
+  
+  eachRecipe(recipe, i) {
+    const recipeElement = 
+              <Recipe key={i} index={i}
+              name={recipe.name} ingredients={recipe.ingredients} 
+              removeRecipe={this.removeRecipe}
+              updateRecipe={this.updateRecipe}
+              editRecipe={this.handleInputChange}
+            />;
+    
+    return ( recipe.unMount ? null : <div  className="recipe-board"> {recipeElement} </div> );
+  }
+
+  render() {
+    const recipes = this.state.recipes;                       
+    return <div className="main">
+      <div className="recipe-list">
+      <h1 id='main-title'>Recipe Box</h1>
+        {recipes.map(this.eachRecipe)}
+        <button type="button" className="btn btn-primary btn-block new-button" onClick={this.showForm}>Add new recipe</button>
+      </div> 
+        <div className="recipe-form" style={{display: this.state.displayForm}}>
+          <div className="new-recipe-title"> NEW RECIPE </div>  
+          <div> <span className="label"> Recipe name </span>
+            <input type="text" name="nameField" autoComplete="off"
+              value={this.state.nameField}
+              onChange={this.handleInputChange}/>
+          </div>
+          <div> <span className="label"> Ingredients </span>
+           <textarea type="text" name="ingredientsField" cols="33" rows="5" noResizable autoComplete="off"
+             value={this.state.ingredientsField}
+             onChange={this.handleInputChange}/>
+          </div>
+          <div>
+            <span className="	glyphicon glyphicon-plus add-button"
+              onClick={this.handleSubmit}></span>
+            <span className="	glyphicon glyphicon-remove close-button" 
+              onClick={this.showForm}></span>
+          </div>
+        </div> 
+    </div>;
+  }
+}
+
+class Recipe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: this.props.name,
+      ingredients: this.props.ingredients,
+      index: this.props.index,
+      remove: this.props.removeRecipe,
+      update: this.props.updateRecipe,
+      save: this.props.saveRecipe,
+      edit: this.props.editRecipe,
+      readonly: true
+    };
+    this.remove = this.remove.bind(this);
+    this.edit = this.edit.bind(this);
+    this.save = this.save.bind(this);
+  }
+    
+  edit() {
+    this.setState({readonly: this.state.readonly === true ? false : true});
+  }
+    
+  remove() {
+    this.state.remove(this.state.index);
+  }
+    
+  save() {
+    this.setState({readonly: this.state.readonly === true ? false : true});
+    let recipe = {name: this.state.name, ingredients: this.state.ingredients};
+    this.state.update(recipe, this.state.index);
+  }
+  render() {
+    return <div className="recipe">
+      <div className="recipe-name">
+        <input type="text" name="nameField" className="recipe-name-field" autoComplete="off"
+          readOnly={this.state.readonly}
+          defaultValue={this.state.name}
+          />
+      </div>
+      <div className="recipe-ingredients">
+        <textarea type="text" name="nameField" cols="33" rows="4" className="recipe-ingredients-field" autoComplete="off"
+          readOnly={this.state.readonly}
+          defaultValue={this.state.ingredients}
+          />
+      </div>
+      <div> 
+        <span className="	glyphicon glyphicon-trash remove-button" onClick={this.remove}></span>
+        <span className="	glyphicon glyphicon-edit edit-button" onClick={this.edit}></span>
+        <span className="	glyphicon glyphicon-refresh save-button" onClick={this.save}
+          style={{display: this.state.readonly === true ? 'none' : 'inline-block'}}></span>
+      </div>
+    </div>;
+  }
+}
+
+React.render(<RecipeBox />, document.getElementById('recipe'));
